@@ -20,6 +20,12 @@ def get_filename():
         filename = "/Users/egill/Desktop/CHILDdb/CHILD_all_weights_outliers.csv"
     return(filename)
 
+# weight = '/Users/egill/Desktop/CHILDdb/CHILD_all_weights.csv'
+# height = '/Users/egill/Desktop/CHILDdb/CHILD_all_heights.csv'
+# diastolic = '/Users/egill/Desktop/CHILDdb/CHILD_diastolic.csv'
+# systolic = '/Users/egill/Desktop/CHILDdb/CHILD_systolic.csv'
+# pulse = '/Users/egill/Desktop/CHILDdb/CHILD_pulse.csv'
+
 
 # get user input : filname to analyze
 filename = get_filename()
@@ -45,5 +51,4 @@ data_output = o.df_append(data_z_scores)
 
 no_outliers = o.remove_z_outliers(data_output)
 
-# analyze data in file
-plot_subset_5(no_outliers)
+skewness = s.plot_subset_5(no_outliers)
