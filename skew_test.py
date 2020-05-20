@@ -7,6 +7,7 @@ import sys
 import pandas as pd
 import matplotlib.pyplot as plt
 from scipy.stats import skew, skewtest
+import calc_outliers as o
 
 sys.path.append("/Users/egill/Desktop/CHILDdb/")
 
@@ -16,12 +17,6 @@ sys.path.append("/Users/egill/Desktop/CHILDdb/")
 # diastolic = pd.read_csv("/Users/egill/Desktop/CHILDdb/CHILD_diastolic_outliers.csv")
 # systolic = pd.read_csv("/Users/egill/Desktop/CHILDdb/CHILD_systolic_outliers.csv")
 # pulse = pd.read_csv("/Users/egill/Desktop/CHILDdb/CHILD_pulse_outliers.csv")
-def get_filename():
-    print("\n\nEnter the path to a csv file containing data you would like to analyze for skewness.\n\n")
-    filename = input()
-    if filename == "" or filename == "\n" or filename is None:
-        filename = "/Users/egill/Desktop/CHILDdb/CHILD_all_weights_outliers.csv"
-    return(filename)
 
 def plot_subset_5(df):
     df = df[df["outlier"] == False]
@@ -66,13 +61,4 @@ def plot_subset_5(df):
     corr = df_cov.corr()
     print(corr)
 
-
-# get user input : filname to analyze
-filename = get_filename()
-
-# open file
-data = pd.read_csv(filename)
-
-# analyze data in file
-plot_subset_5(data)
 

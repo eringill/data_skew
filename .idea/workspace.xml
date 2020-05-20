@@ -2,9 +2,7 @@
 <project version="4">
   <component name="ChangeListManager">
     <list default="true" id="c42b3ae6-f167-46e2-86c5-cfd02459ea07" name="Default Changelist" comment="">
-      <change afterPath="$PROJECT_DIR$/.idea/vcs.xml" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/outliers.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/calc_outliers.py" beforeDir="false" afterPath="$PROJECT_DIR$/calc_outliers.py" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/skew_test.py" beforeDir="false" afterPath="$PROJECT_DIR$/skew_test.py" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
@@ -88,7 +86,7 @@
       <option name="number" value="Default" />
       <option name="presentableId" value="Default" />
       <updated>1590014498507</updated>
-      <workItem from="1590014508461" duration="1518000" />
+      <workItem from="1590014508461" duration="2411000" />
     </task>
     <servers />
   </component>
