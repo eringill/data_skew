@@ -4,8 +4,6 @@
 
 import sys
 import pandas as pd
-import matplotlib.pyplot as plt
-from scipy.stats import skew, skewtest
 import calc_outliers as o
 import skew_test as s
 
@@ -51,4 +49,15 @@ data_output = o.df_append(data_z_scores)
 
 no_outliers = o.remove_z_outliers(data_output)
 
-skewness = s.plot_subset_5(no_outliers)
+age5 = s.age5_df(no_outliers)
+
+s.plot_age_hist(age5, filename)
+
+s.plot_value_hist(age5, filename)
+
+s.plot_dotplot(age5, filename)
+
+s.plot_violinplot(age5, filename)
+
+s.calculate_skew(age5, filename)
+
