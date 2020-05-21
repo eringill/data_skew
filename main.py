@@ -18,11 +18,11 @@ def get_filename():
         filename = "/Users/egill/Desktop/CHILDdb/CHILD_all_weights_outliers.csv"
     return(filename)
 
-# weight = '/Users/egill/Desktop/CHILDdb/CHILD_all_weights.csv'
-# height = '/Users/egill/Desktop/CHILDdb/CHILD_all_heights.csv'
-# diastolic = '/Users/egill/Desktop/CHILDdb/CHILD_diastolic.csv'
-# systolic = '/Users/egill/Desktop/CHILDdb/CHILD_systolic.csv'
-# pulse = '/Users/egill/Desktop/CHILDdb/CHILD_pulse.csv'
+# weight = /Users/egill/Desktop/CHILDdb/CHILD_all_weights.csv
+# height = /Users/egill/Desktop/CHILDdb/CHILD_all_heights.csv
+# diastolic = /Users/egill/Desktop/CHILDdb/CHILD_diastolic.csv
+# systolic = /Users/egill/Desktop/CHILDdb/CHILD_systolic.csv
+# pulse = /Users/egill/Desktop/CHILDdb/CHILD_pulse.csv
 
 
 # get user input : filname to analyze

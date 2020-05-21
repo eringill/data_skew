@@ -17,7 +17,7 @@ def age5_df(df):
 
 
 def plot_age_hist(df, filename):
-    plt.hist(df["age_years"], bins=20)
+    plt.hist(df["age"], bins=20)
     plt.xlabel('Age in Years')
     plt.ylabel('Number')
     histageplotname = filename.replace('.csv', '_age5histage.png')
@@ -35,7 +35,7 @@ def plot_value_hist(df, filename):
 
 
 def plot_dotplot(df, filename):
-    plt.plot(df["age_years"], df["value"], "o")
+    plt.plot(df["age"], df["value"], "o")
     plt.xlabel('Age in Years')
     plt.ylabel('Value')
     dotplotname = filename.replace('.csv', '_age5dotplot.png')
@@ -68,7 +68,8 @@ def calculate_skew(df, filename):
     corr = df_cov.corr()
     print(corr)
     skewfilename = filename.replace('.csv', '_skewtestresults.txt')
+    line1 = "skewness = " + str(sk) + "\n"
+    line2 = "significance = p " + str(result[1]) + "\n"
+    line3 = "correlation of data with age = " + "\n" + str(corr) + "\n"
     with open(skewfilename, 'w') as file:
-        file.write("skewness = ", str(sk), "\n")
-        file.write("significance = p ", str(result[1]), "\n")
-        file.write("correlation of data with age = ", str(corr), "\n")
+        file.writelines([line1, line2, line3])
