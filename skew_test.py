@@ -7,6 +7,8 @@ import sys
 import pandas as pd
 import matplotlib.pyplot as plt
 from scipy.stats import skew, skewtest
+import statistics as stats
+
 
 sys.path.append("/Users/egill/Desktop/CHILDdb/")
 
@@ -17,10 +19,12 @@ def age5_df(df):
 
 
 def plot_value_hist(df, filename):
-    plt.hist(df["value"], bins=20)
+    plt.hist(df["value"], bins=20, edgecolor = 'k')
     plt.xlabel('Value')
     plt.ylabel('Number')
     histvalueplotname = filename.replace('.csv', '_age5histvalue.png')
+    plt.axvline(df['value'].mean(), color='k', linestyle='dashed', linewidth=1)
+    plt.axvline(df['value'].median(), color='b', linestyle='dashed', linewidth=1)
     plt.savefig(histvalueplotname, format="png")
     plt.show()
 
