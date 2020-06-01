@@ -12,17 +12,8 @@ sys.path.append("/Users/egill/Desktop/CHILDdb/")
 
 
 def age5_df(df):
-    df5 = df[round(df["age"]) == 5]
+    df5 = df[df["age_rounded"] == 1]
     return df5
-
-
-def plot_age_hist(df, filename):
-    plt.hist(df["age"], bins=20)
-    plt.xlabel('Age in Years')
-    plt.ylabel('Number')
-    histageplotname = filename.replace('.csv', '_age5histage.png')
-    plt.savefig(histageplotname, format="png")
-    plt.show()
 
 
 def plot_value_hist(df, filename):
@@ -43,15 +34,6 @@ def plot_dotplot(df, filename):
     plt.show()
 
 
-def plot_violinplot(df, filename):
-    plt.violinplot(df["value"])
-    plt.ylabel('Value')
-    plt.xticks([])
-    violinplotname = filename.replace('.csv', '_age5violinplot.png')
-    plt.savefig(violinplotname, format="png")
-    plt.show()
-
-
 def calculate_skew(df, filename):
     sk = skew(df["value"])
     print('\nSkewness for data : ', str(sk))
@@ -64,12 +46,18 @@ def calculate_skew(df, filename):
         print('\nData are significantly skewed.')
     else:
         print('\nSkewness of data is not significant.')
+        line1 = "skewness = " + str(sk) + "\n"
+        line2 = "significance = p " + str(result[1]) + "\n"
+        skewfilename = filename.replace('.csv', '_skewtestresults.txt')
+        with open(skewfilename, 'w') as file:
+            file.writelines([line1, line2])
+
+
+def calculate_cov(df, filename):
     df_cov = df[['age', 'value']]
     corr = df_cov.corr()
     print(corr)
-    skewfilename = filename.replace('.csv', '_skewtestresults.txt')
-    line1 = "skewness = " + str(sk) + "\n"
-    line2 = "significance = p " + str(result[1]) + "\n"
+    covfilename = filename.replace('.csv', '_covariancetestresults.txt')
     line3 = "correlation of data with age = " + "\n" + str(corr) + "\n"
-    with open(skewfilename, 'w') as file:
-        file.writelines([line1, line2, line3])
+    with open(covfilename, 'w') as file:
+        file.write(line3)

@@ -13,6 +13,11 @@ def add_age(data_f):
     return data_f
 
 
+def round_age(data_f):
+    data_f['age_rounded'] = round(data_f['age'])
+    return data_f
+
+
 def min_age(data_f):
     return min(data_f['age_rounded'])
 

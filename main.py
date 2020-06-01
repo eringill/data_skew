@@ -31,7 +31,17 @@ filename = get_filename()
 # open file
 data = pd.read_csv(filename)
 
-data = o.add_age(data)
+if "age_in_days" in data.columns:
+
+    data = o.add_age(data)
+
+elif "age" in data.columns:
+
+    data = o.round_age(data)
+
+else:
+
+    data["age_rounded"] = 1
 
 min_a = o.min_age(data)
 
@@ -51,13 +61,14 @@ no_outliers = o.remove_z_outliers(data_output)
 
 age5 = s.age5_df(no_outliers)
 
-s.plot_age_hist(age5, filename)
-
 s.plot_value_hist(age5, filename)
 
-s.plot_dotplot(age5, filename)
+if "age" in age5.columns:
+    s.plot_dotplot(age5, filename)
 
-s.plot_violinplot(age5, filename)
+    s.calculate_cov(age5, filename)
 
 s.calculate_skew(age5, filename)
+
+
 
