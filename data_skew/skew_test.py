@@ -18,7 +18,7 @@ def plot_value_hist(df, filename):
     plt.hist(df["value"], bins=20, edgecolor = 'k', alpha = 0.6)
     plt.xlabel('Value')
     plt.ylabel('Number')
-    histvalueplotname = filename.replace('.csv', '_age5histvalue.png')
+    histvalueplotname = filename.replace('.csv', '_histvalue.png')
     plt.axvline(df['value'].mean(), color='r', linestyle='dashed', linewidth=1, label='mean')
     plt.axvline(df['value'].median(), color='b', linestyle='dashed', linewidth=1, label='median')
     plt.legend(loc=0)

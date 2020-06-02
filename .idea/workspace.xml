@@ -2,9 +2,6 @@
 <project version="4">
   <component name="ChangeListManager">
     <list default="true" id="c42b3ae6-f167-46e2-86c5-cfd02459ea07" name="Default Changelist" comment="">
-      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/data_skew/calc_outliers.py" beforeDir="false" afterPath="$PROJECT_DIR$/data_skew/calc_outliers.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/data_skew/main.py" beforeDir="false" afterPath="$PROJECT_DIR$/data_skew/main.py" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/data_skew/skew_test.py" beforeDir="false" afterPath="$PROJECT_DIR$/data_skew/skew_test.py" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
@@ -91,7 +88,7 @@
       <workItem from="1590014508461" duration="10086000" />
       <workItem from="1590601015698" duration="615000" />
       <workItem from="1591030749519" duration="6871000" />
-      <workItem from="1591067905939" duration="3317000" />
+      <workItem from="1591067905939" duration="3636000" />
     </task>
     <servers />
   </component>
