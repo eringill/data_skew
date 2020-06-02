@@ -3,7 +3,8 @@
   <component name="ChangeListManager">
     <list default="true" id="c42b3ae6-f167-46e2-86c5-cfd02459ea07" name="Default Changelist" comment="">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/README.md" beforeDir="false" afterPath="$PROJECT_DIR$/README.md" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/data_skew/main.py" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/data_skew/skew_test.py" beforeDir="false" afterPath="$PROJECT_DIR$/data_skew/skew_test.py" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -56,7 +57,7 @@
       <option name="INPUT_FILE" value="" />
       <method v="2" />
     </configuration>
-    <configuration name="main" type="PythonConfigurationType" factoryName="Python" nameIsGenerated="true">
+    <configuration name="core" type="PythonConfigurationType" factoryName="Python" nameIsGenerated="true">
       <module name="data_skew" />
       <option name="INTERPRETER_OPTIONS" value="" />
       <option name="PARENT_ENVS" value="true" />
@@ -66,7 +67,7 @@
       <option name="ADD_CONTENT_ROOTS" value="true" />
       <option name="ADD_SOURCE_ROOTS" value="true" />
       <EXTENSION ID="PythonCoverageRunConfigurationExtension" runner="coverage.py" />
-      <option name="SCRIPT_NAME" value="$PROJECT_DIR$/data_skew/main.py" />
+      <option name="SCRIPT_NAME" value="$PROJECT_DIR$/data_skew/core.py" />
       <option name="PARAMETERS" value="" />
       <option name="SHOW_COMMAND_LINE" value="true" />
       <option name="EMULATE_TERMINAL" value="false" />
@@ -89,7 +90,8 @@
       <workItem from="1590014508461" duration="10086000" />
       <workItem from="1590601015698" duration="615000" />
       <workItem from="1591030749519" duration="6871000" />
-      <workItem from="1591067905939" duration="4412000" />
+      <workItem from="1591067905939" duration="4770000" />
+      <workItem from="1591141718329" duration="149000" />
     </task>
     <servers />
   </component>
@@ -97,10 +99,10 @@
     <option name="version" value="2" />
   </component>
   <component name="WindowStateProjectService">
-    <state x="336" y="248" width="1071" height="696" key="#com.intellij.execution.impl.EditConfigurationsDialog" timestamp="1591066285759">
+    <state x="336" y="248" width="1071" height="696" key="#com.intellij.execution.impl.EditConfigurationsDialog" timestamp="1591141736726">
       <screen x="0" y="23" width="1872" height="1057" />
     </state>
-    <state x="336" y="248" width="1071" height="696" key="#com.intellij.execution.impl.EditConfigurationsDialog/0.23.1872.1057@0.23.1872.1057" timestamp="1591066285759" />
+    <state x="336" y="248" width="1071" height="696" key="#com.intellij.execution.impl.EditConfigurationsDialog/0.23.1872.1057@0.23.1872.1057" timestamp="1591141736726" />
     <state width="1608" height="212" key="GridCell.Tab.0.bottom" timestamp="1590091521520">
       <screen x="0" y="23" width="1872" height="1057" />
     </state>

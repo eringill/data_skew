@@ -7,15 +7,17 @@
 import matplotlib.pyplot as plt
 from scipy.stats import skew, skewtest
 
+
 # select data from highest age only
 def age5_df(df):
     agemax = df['age_rounded'].max()
     df5 = df[df["age_rounded"] == agemax]
     return df5
 
+
 # plot histogram of data
 def plot_value_hist(df, filename):
-    plt.hist(df["value"], bins=20, edgecolor = 'k', alpha = 0.6)
+    plt.hist(df["value"], bins=20, edgecolor='k', alpha=0.6)
     plt.xlabel('Value')
     plt.ylabel('Number')
     histvalueplotname = filename.replace('.csv', '_histvalue.png')
@@ -24,6 +26,7 @@ def plot_value_hist(df, filename):
     plt.legend(loc=0)
     plt.savefig(histvalueplotname, format="png")
     plt.show()
+
 
 # calculate skew of data
 def calculate_skew(df, filename):
@@ -37,11 +40,12 @@ def calculate_skew(df, filename):
         print('\nData are significantly skewed.')
     else:
         print('\nSkewness of data is not significant.')
-        line1 = "skewness = " + str(sk) + "\n"
-        line2 = "significance = p " + str(result[1]) + "\n"
-        skewfilename = filename.replace('.csv', '_skewtestresults.txt')
-        with open(skewfilename, 'w') as file:
-            file.writelines([line1, line2])
+    line1 = "skewness = " + str(sk) + "\n"
+    line2 = "significance = p " + str(result[1]) + "\n"
+    skewfilename = filename.replace('.csv', '_skewtestresults.txt')
+    with open(skewfilename, 'w') as file:
+        file.writelines([line1, line2])
+
 
 # calculate covariance of data with age
 def calculate_cov(df, filename):
