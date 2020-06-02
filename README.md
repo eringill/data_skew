@@ -1,4 +1,5 @@
 <<<<<<< Updated upstream
+<<<<<<< Updated upstream
 data_skew:
 ==========
 
@@ -22,6 +23,11 @@ OUTPUT:
 #data_skew:
 removes outliers from data using modified z-score method, then plots a histogram of data values and tests for skewness.
 
+=======
+#data_skew:
+removes outliers from data using modified z-score method, then plots a histogram of data values and tests for skewness.
+
+>>>>>>> Stashed changes
 ##INPUT:
 *This package requires a .csv file with a column labeled "values" as input.
 *If there is data from multiple ages in this file, place this data in columns labeled "age_in_days" or "age".
