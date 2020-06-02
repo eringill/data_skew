@@ -18,12 +18,6 @@ def get_filename():
         filename = "/Users/egill/Desktop/CHILDdb/CHILD_all_weights_outliers.csv"
     return(filename)
 
-# weight = /Users/egill/Desktop/CHILDdb/CHILD_all_weights.csv
-# height = /Users/egill/Desktop/CHILDdb/CHILD_all_heights.csv
-# diastolic = /Users/egill/Desktop/CHILDdb/CHILD_diastolic.csv
-# systolic = /Users/egill/Desktop/CHILDdb/CHILD_systolic.csv
-# pulse = /Users/egill/Desktop/CHILDdb/CHILD_pulse.csv
-
 
 # get user input : filname to analyze
 filename = get_filename()
@@ -64,7 +58,6 @@ age5 = s.age5_df(no_outliers)
 s.plot_value_hist(age5, filename)
 
 if "age" in age5.columns:
-    s.plot_dotplot(age5, filename)
 
     s.calculate_cov(age5, filename)
 

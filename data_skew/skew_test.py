@@ -3,18 +3,15 @@
 
 # @author: egill
 
-import sys
 import pandas as pd
 import matplotlib.pyplot as plt
 from scipy.stats import skew, skewtest
 import statistics as stats
 
 
-sys.path.append("/Users/egill/Desktop/CHILDdb/")
-
-
 def age5_df(df): ###edit this so that it finds age with most entries#####
-    df5 = df[df["age_rounded"] == 1]
+    agemax = df['age_rounded'].max()
+    df5 = df[df["age_rounded"] == agemax]
     return df5
 
 
@@ -26,15 +23,6 @@ def plot_value_hist(df, filename):
     plt.axvline(df['value'].mean(), color='k', linestyle='dashed', linewidth=1)
     plt.axvline(df['value'].median(), color='b', linestyle='dashed', linewidth=1)
     plt.savefig(histvalueplotname, format="png")
-    plt.show()
-
-
-def plot_dotplot(df, filename):
-    plt.plot(df["age"], df["value"], "o")
-    plt.xlabel('Age in Years')
-    plt.ylabel('Value')
-    dotplotname = filename.replace('.csv', '_age5dotplot.png')
-    plt.savefig(dotplotname, format="png")
     plt.show()
 
 

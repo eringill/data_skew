@@ -33,17 +33,15 @@ def calc_stats(df_list, data_f):
     stats = []
     colnames = ['age_rounded', 'median', 'lower', 'upper']
     table = pd.DataFrame()
-    age = min_age(data_f)
     for i in df_list:
         if len(i) > 5:  # must modify function so that stats are only generated with min of 5 samples
-            stats.append(age)
+            stats.append(i['age_rounded'].iloc[0])
             stats.append(stat.median(i['value']))
             IQR = (i['value'].describe()[6] - i['value'].describe()[4])
             stats.append(i['value'].describe()[4] - (1.5 * IQR))
             stats.append(i['value'].describe()[6] + (1.5 * IQR))
             stats_df = pd.DataFrame(stats).T
             table = table.append(stats_df, ignore_index=True)
-        age += 1
         stats = []
     table.columns = colnames
     return table
