@@ -24,20 +24,18 @@ filename = get_filename()
 
 # open file
 data = pd.read_csv(filename)
-
+# if "age_in_days" exists, convert to age_rounded
 if "age_in_days" in data.columns:
 
     data = o.add_age(data)
-
+# if "age exists, convert to age_rounded
 elif "age" in data.columns:
 
     data = o.round_age(data)
-
+# else set "age_rounded" to 1
 else:
 
     data["age_rounded"] = 1
-
-min_a = o.min_age(data)
 
 data_split = o.split_by_age(data)
 

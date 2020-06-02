@@ -12,14 +12,10 @@ def add_age(data_f):
     data_f['age_rounded'] = round(data_f['age'])
     return data_f
 
-
+# round age
 def round_age(data_f):
     data_f['age_rounded'] = round(data_f['age'])
     return data_f
-
-
-def min_age(data_f):
-    return min(data_f['age_rounded'])
 
 
 # split all data frames by age to calculate age-specific IQRs
@@ -95,7 +91,7 @@ def df_append(df_list):
         big_df = big_df.append(i, ignore_index=True, sort=True)
     return big_df
 
-
+# remove modified z-score outliers before running skew analysis
 def remove_z_outliers(data_f):
     data_f['z_outlier'] = abs(data_f['mod_z_score']) > 3.5
     return data_f[data_f['z_outlier'] == False]
