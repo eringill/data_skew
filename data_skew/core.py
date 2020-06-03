@@ -7,15 +7,12 @@ import pandas as pd
 import calc_outliers as o
 import skew_test as s
 
-sys.path.append("/Users/egill/Desktop/CHILDdb/")
-
-
 # functions
 def get_filename():
     print("\n\nEnter the path to a csv file containing data you would like to analyze for skewness.\n\n")
     filename = input()
     if filename == "" or filename == "\n" or filename is None:
-        filename = "/Users/egill/Desktop/CHILDdb/CHILD_all_weights_outliers.csv"
+        filename = "data/test_data.csv"
     return(filename)
 
 
@@ -61,6 +58,5 @@ if "age" in age5.columns:
 
 s.calculate_skew(age5, filename)
 
-exit()
 
 
