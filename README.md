@@ -9,7 +9,7 @@ INPUT:
 1. This package requires a .csv file with a column labeled *"values"* as input.
 2. If there is data from multiple ages in this file, place this data in columns labeled *"age_in_days"* or *"age"*.
 3. Skewness will only be calculated for the data from the highest age.
-4. Test data have been provided if you would like to observe the behavior of the program. Simply hit the <enter> key when
+4. Test data have been provided if you would like to observe the behavior of the program. Simply hit the `enter` key when
 asked for input.
 
 OUTPUT:
