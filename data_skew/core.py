@@ -61,5 +61,6 @@ if "age" in age5.columns:
 
 s.calculate_skew(age5, filename)
 
+exit()
 
 
