@@ -1,4 +1,0 @@
-correlation of data with age = 
-            age     value
-age    1.000000  0.167198
-value  0.167198  1.000000
