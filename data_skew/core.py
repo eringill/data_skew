@@ -2,23 +2,50 @@
 
 # @author: egill
 
+from optparse import OptionParser
 import sys
+import os
 import pandas as pd
 import calc_outliers as o
 import skew_test as s
 
 # functions
-def get_filename():
-    print("\n\nEnter the path to a csv file containing data you would like to analyze for skewness.\n\n")
-    filename = input()
-    if filename == "" or filename == "\n" or filename is None:
-        filename = "data/test_data.csv"
-    return(filename)
+_ROOT = os.path.abspath(os.path.dirname(__file__))
+def get_data(path):
+    return os.path.join(_ROOT, 'data', path)
+
+'''
+Function to get the name of the file that contains the data the user wants to analyze
+
+Input: input_file (the path to the file that the user inputted when calling the script)
+Ouput: filename
+'''
+def get_filename(input_file):
+    filename = None
+    if input_file == None:
+        # if no filename is specified, ask user to specify one
+        print("\n\nEnter the path to a csv file containing data you would like to analyze for outliers OR re-run this program using the -i flag: python core.py -i /absolute/path/to/file.csv'\n\n")
+        # allow the user to type in the filename
+        filename = input()
+        # if the user doesn't type anything or presses 'enter', use the sample data file
+        if filename == "" or filename == "\n" or filename is None:
+            filename = get_data('test_data.csv')
+        else: 
+            filename = get_data(filename) 
+    else:
+        # get filename and fix FileNotFoundError when the input is just the filename.
+        filename = get_data(input_file) 
+    return filename
 
 
-# get user input : filname to analyze
-filename = get_filename()
+# allow user to specify input file name as command line argument
+parser = OptionParser()
+parser.add_option("-i", "--input-file", dest="input_file", action="store", type="string")
 
+(options, args) = parser.parse_args()
+
+# get the .csv filename
+filename = get_filename(options.input_file)
 # open file
 data = pd.read_csv(filename)
 # if "age_in_days" exists, convert to age_rounded
