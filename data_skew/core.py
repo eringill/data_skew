@@ -48,6 +48,14 @@ parser.add_option("-i", "--input-file", dest="input_file", action="store", type=
 filename = get_filename(options.input_file)
 # open file
 data = pd.read_csv(filename)
+
+# remove rows containing empty/blank values.
+data = o.remove_blanks(data)
+
+# remove rows containing values that correspond to codes.
+# for example, a code could represent lack of data, not an actual data point.
+data = o.remove_codes(data)
+
 # if "age_in_days" exists, convert to age_rounded
 if "age_in_days" in data.columns:
 

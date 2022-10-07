@@ -7,6 +7,37 @@ import statistics as stat
 
 
 # functions
+'''
+Function that removes rows with blank values from a DataFrame.
+
+Input: df (DataFrame that contains a column 'value')
+Output: DataFrame without rows containing blank values
+'''
+def remove_blanks(df):
+    return df[df.value.notnull()]
+    
+'''
+Function that removes rows from a DataFrame if the row's value matches a code, and is therefore not an actual data point.
+
+Input: df (DataFrame that contains a column 'value')
+Output: DataFrame without rows containing values that match a code
+'''
+def remove_codes(df):
+    '''
+    Codes:
+        888 - Not applicable
+        666 - Don't know
+        8888 - Subject skipped the questionnaire
+        444 - Questionnaire not applicable
+        555 - Participant refused to answer question/perform test
+        999 - No response to this question
+        777 - Question not asked
+        9999 - Not recorded
+    '''
+    codes = [888, 666, 8888, 444, 555, 999, 777, 9999]
+    # keep rows containing values that do not match a code
+    return df[(~df.value.isin(codes))]
+    
 def add_age(data_f):
     data_f['age'] = data_f['age_in_days'] / 365
     data_f['age_rounded'] = round(data_f['age'])
