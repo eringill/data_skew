@@ -40,7 +40,11 @@ def get_filename(input_file):
 
 # allow user to specify input file name as command line argument
 parser = OptionParser()
-parser.add_option("-i", "--input-file", dest="input_file", action="store", type="string")
+parser.add_option("-i", "--input-file", dest="input_file", action="store", type="string", help="The input filepath.")
+parser.add_option("-a", "--age", dest="age", action="store", type="int", help="The age to examine. Default is the max age in the input file.")
+parser.add_option("-z", "--z-outlier-threshold", dest="z_outlier_threshold", action="store", type="int", default=3.5, help="A value whose modified z-score has an absolute value above this threshold is considered an outlier. Default is 3.5.")
+parser.add_option("-e", "--extreme-outlier-threshold", dest="extreme_outlier_threshold", action="store", type="int", default=7, help="A value whose modified z-score has an absolute value above this threshold is considered an extreme outlier. Default is 7.")
+
 
 (options, args) = parser.parse_args()
 
@@ -81,17 +85,22 @@ data_z_scores = o.mod_z_score(data_outliers)
 
 data_output = o.df_append(data_z_scores)
 
-no_outliers = o.remove_z_outliers(data_output)
+# Comment this out so that we change functionality to include outliers in the histogram.
+# no_outliers = o.remove_z_outliers(data_output)
 
-age5 = s.age5_df(no_outliers)
+# age5 = s.age5_df(no_outliers)
 
-s.plot_value_hist(age5, filename)
+df_age = s.age_df(data_output, options.age)
 
-if "age" in age5.columns:
+s.plot_z_hist(df_age, filename, options.z_outlier_threshold, options.extreme_outlier_threshold)
 
-    s.calculate_cov(age5, filename)
+# s.plot_value_hist(df_age, filename)
 
-s.calculate_skew(age5, filename)
+# if "age" in df_age.columns:
+
+#     s.calculate_cov(df_age, filename)
+
+# s.calculate_skew(df_age, filename)
 
 
 
