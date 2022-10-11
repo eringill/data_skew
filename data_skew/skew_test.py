@@ -51,6 +51,11 @@ def plot_z_hist(df, filename, z, extreme_z):
     # Label the axes.
     plt.xlabel('Modified z-score')
     plt.ylabel('Number')
+
+    # Label each bin with the number of participants in that bin.
+    # Don't need to label bins with zero participants.
+    labels = [int(val) if val > 0 else '' for val in bars.datavalues]
+    plt.bar_label(bars, labels=labels, label_type='edge', rotation=90, fontsize=7, padding=5)
     
     # Colour code histogram bins so that we distingush non-outliers, outliers, and extreme outliers.
     for bar in bars: 
