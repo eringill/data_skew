@@ -41,7 +41,6 @@ def get_filename(input_file):
 # allow user to specify input file name as command line argument
 parser = OptionParser()
 parser.add_option("-i", "--input-file", dest="input_file", action="store", type="string", help="The input filepath.")
-parser.add_option("-a", "--age", dest="age", action="store", type="float", help="The age to examine. Default is the max age in the input file.")
 parser.add_option("-z", "--z-outlier-threshold", dest="z_outlier_threshold", action="store", type="int", default=3.5, help="A value whose modified z-score has an absolute value above this threshold is considered an outlier. Default is 3.5.")
 parser.add_option("-e", "--extreme-outlier-threshold", dest="extreme_outlier_threshold", action="store", type="float", default=7, help="A value whose modified z-score has an absolute value above this threshold is considered an extreme outlier. Default is 7.")
 
@@ -90,9 +89,7 @@ data_output = o.df_append(data_z_scores)
 
 # age5 = s.age5_df(no_outliers)
 
-df_age = s.age_df(data_output, options.age)
-
-s.plot_z_hist(df_age, filename, options.z_outlier_threshold, options.extreme_outlier_threshold)
+s.plot_z_hists(data_output, filename, options.z_outlier_threshold, options.extreme_outlier_threshold)
 
 # s.plot_value_hist(df_age, filename)
 
