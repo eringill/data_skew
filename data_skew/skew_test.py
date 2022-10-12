@@ -6,7 +6,6 @@
 
 import matplotlib.pyplot as plt
 from scipy.stats import skew, skewtest
-import math
 from matplotlib.lines import Line2D
 from pathlib import Path
 import numpy as np
@@ -32,7 +31,7 @@ Input: title of the category, number of items in the category, and total number 
 Output: string that reports the category title, category count, and the percentage of total values that are part of the category
 '''
 def legend_label(category_title, category_count, total_count):
-    return '{:<10}{} / {} = {:.1%}'.format(category_title, category_count, total_count, category_count / total_count)
+    return '{:<10}{:>6} / {:<6} = {:.1%}'.format(category_title, category_count, total_count, category_count / total_count)
 
 '''
 Function that plots one or more modified z-score outlier histograms on the same figure. One histogram is created for each age (year).
@@ -56,17 +55,22 @@ def plot_z_hists(df, filename, z, extreme_z):
         df_age = age_df(df, min_age + i)
         # Create a histogram for that age.
         plot_z_hist(df_age, axes[i], z, extreme_z, ' Age {}'.format(min_age + i), constant)
-    
-    plt.subplots_adjust(hspace=1)
 
     # Since we multiplied the x-values by a constant, we need to adjust the x-tick values by that constant.
     tick_values, _ = plt.xticks()
     plt.xticks(tick_values, [float(value) / constant for value in tick_values])
 
     # Label the title and axes.
-    fig.suptitle(Path(filename).stem)
+    fig.suptitle(Path(filename).stem, fontweight='bold')
     fig.supxlabel('Modified z-score', font='monospace')
     fig.supylabel('Number', font='monospace')
+
+    # Adjust figure size, margins, and layout.
+    fig.set_figheight(8)
+    fig.set_figwidth(14)
+    plt.margins(x=0)
+    plt.tight_layout()
+    plt.subplots_adjust(hspace=0.2, right=0.7, top=0.9, bottom=0.1, left=0.1)
 
     # Save file.
     plotname = filename.replace('.csv', '_z_score_hist.png')
@@ -110,21 +114,26 @@ def plot_z_hist(df, axis, z, extreme_z, title, constant=10):
     # Play around with the bin width and yscale value to see what produces the most informative visuals.
     bin_width = 5
     axis.set_yscale('symlog')
+    # Any modified z-scores >= hist_edge (or < -hist_edge) will not be shown on the histogram.
+    # In other words, set a maximum x-limit (xlim). This value is not automatically adjusted by the constant.
+    hist_edge = 10
 
     # Subtract bin_width from minimum mod_z_score to ensure that the min is included in the histogram range.
     # Add bin_width to maximum mod_z_score to ensure that the max is included in the histogram range. 
     range_min = bin_width * round(new_df.min() / bin_width) - bin_width
     range_max = bin_width * round(new_df.max() / bin_width) + bin_width
-    bin_range = range(range_min, range_max, bin_width)
+    # If our min/max mod_z_scores are within hist_edge, then display all mod_z_scores.
+    # If our min/max mod_z_scores are outside hist_edge, then only display mod_z_scores within hist_edge.
+    # Need the "+1" because range() function doesn't include its second argument in its output range.
+    bin_range = range(max(range_min, -hist_edge * constant), min(range_max, hist_edge * constant)+1, bin_width)
 
     # Create the histogram.
     _, _, bars = axis.hist(new_df, bins=bin_range, edgecolor='k', alpha=0.5, align='mid')
     
     # Label each bin with the number of participants in that bin.
-    # Don't need to label bins with zero participants.
+    # To avoid visual clutter, don't label bins with zero participants.
     labels = [int(val) if val > 0 else '' for val in bars.datavalues]
     axis.bar_label(bars, labels=labels, label_type='edge', rotation=90, fontsize=7, padding=5)
-    _, ymax = axis.get_ylim()
     
     # Colour code histogram bins so that we distingush non-outliers, outliers, and extreme outliers.
     for bar in bars: 
@@ -142,27 +151,50 @@ def plot_z_hist(df, axis, z, extreme_z, title, constant=10):
     extreme_n = len(df.loc[abs(df['mod_z_score']) > extreme_z])
     outlier_n = len(df.loc[abs(df['mod_z_score']) > z]) - extreme_n
     non_n = df.shape[0] - extreme_n - outlier_n
+
+    # Get min and max mod_z_scores.
+    min_z = df['mod_z_score'].min()
+    max_z = df['mod_z_score'].max()
+    props = dict(boxstyle='round', alpha=0.2, facecolor='orange')
+    
+    # If there are any points offscreen (below -hist_edge), report this in a text box.
+    if (min_z < -hist_edge):
+        # Find how many points are offscreen (below -hist_edge).
+        lower_n = len(df.loc[df['mod_z_score'] < -hist_edge])
+        text = '{} pt(s) offscreen\nin [{:.1f}, {:.1f})'.format(lower_n, min_z, -hist_edge)
+        
+        # Put the text box at the top-left of the plot.
+        axis.text(0.01, 0.95, text, transform=axis.transAxes, fontsize=7, verticalalignment='top', horizontalalignment='left', bbox=props)
+    
+    # If there are any points offscreen (above hist_edge), report this in a text box.
+    if (max_z >= hist_edge):
+        # Find how many points are offscreen (above hist_edge).
+        upper_n = len(df.loc[df['mod_z_score'] >= hist_edge])
+        text = '{} pt(s) offscreen\nin [{:.1f}, {:.1f}]'.format(upper_n, hist_edge, max_z)
+        
+        # Put the text box at the top-right of the plot.
+        axis.text(0.99, 0.95, text, transform=axis.transAxes, fontsize=7, verticalalignment='top', horizontalalignment='right', bbox=props)
+
+    # If there are any outliers, add vertical lines to show where the thresholds are.
+    [left, right] = axis.get_xlim()
+    if (z * constant < right): 
+        axis.axvline(constant * z, color='orange', linestyle='dashed', linewidth=1, label='Outlier')
+    if (-z * constant > left): 
+        axis.axvline(constant * -z, color='orange', linestyle='dashed', linewidth=1, label='Outlier')
+    
+    # If there are any extreme outliers, add vertical lines to show where the thresholds are.
+    if (extreme_z * constant < right): 
+        axis.axvline(constant * extreme_z, color='r', linestyle='dashed', linewidth=1, label='Extreme')
+    if (-extreme_z * constant > left): 
+        axis.axvline(constant * -extreme_z, color='r', linestyle='dashed', linewidth=1, label='Extreme')
     
     # Create a list of legend elements with descriptive labels. Add colour-coding.
     legend_elements = [Line2D([0], [0], color='r', lw=2, label=legend_label('Extreme', extreme_n, total_n)),
                    Line2D([0], [0], color='orange', lw=2, label=legend_label('Outlier', outlier_n, total_n)),
                    Line2D([0], [0], color='b', lw=2, label=legend_label('Inlier', non_n, total_n))]
-    
-    min_z = df['mod_z_score'].min()
-    max_z = df['mod_z_score'].max()
-
-    # If there are any outliers or extreme outliers, add vertical lines to show the thresholds where they begin.
-    if (extreme_z < max_z): 
-        axis.axvline(constant * extreme_z, color='r', linestyle='dashed', linewidth=1, label='Extreme')
-    if (z < max_z): 
-        axis.axvline(constant * z, color='orange', linestyle='dashed', linewidth=1, label='Outlier')
-    if (extreme_z < abs(min_z)): 
-        axis.axvline(constant * -extreme_z, color='r', linestyle='dashed', linewidth=1, label='Extreme')
-    if (z < abs(min_z)): 
-        axis.axvline(constant * -z, color='orange', linestyle='dashed', linewidth=1, label='Outlier')
 
     # Create the legend.
-    axis.legend(handles=legend_elements, loc='center left', bbox_to_anchor=(1.1, 0.5), prop={'size': 8}, title=title)
+    axis.legend(handles=legend_elements, loc='center left', bbox_to_anchor=(1.05, 0.5), prop={'size': 8}, title=title)
 
     return True
     
