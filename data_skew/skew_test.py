@@ -31,7 +31,7 @@ Input: title of the category, number of items in the category, and total number 
 Output: string that reports the category title, category count, and the percentage of total values that are part of the category
 '''
 def legend_label(category_title, category_count, total_count):
-    return '{:<10}{:>6} / {:<6} = {:.1%}'.format(category_title, category_count, total_count, category_count / total_count)
+    return '{:<8}{:>6} / {:<6} = {:.1%}'.format(category_title, category_count, total_count, category_count / total_count)
 
 '''
 Function that plots one or more modified z-score outlier histograms on the same figure. One histogram is created for each age (year).
@@ -67,7 +67,7 @@ def plot_z_hists(df, filename, z, extreme_z):
 
     # Adjust figure size, margins, and layout.
     fig.set_figheight(8)
-    fig.set_figwidth(14)
+    fig.set_figwidth(10)
     plt.margins(x=0)
     plt.tight_layout()
     plt.subplots_adjust(hspace=0.2, right=0.7, top=0.9, bottom=0.1, left=0.1)
@@ -78,6 +78,19 @@ def plot_z_hists(df, filename, z, extreme_z):
     plt.savefig(plotname, format="png", bbox_inches='tight')
     plt.show()
 
+'''
+Function that adds a vertical line to a matplotlib Axes.
+
+Input:
+    axis                    A Matplotlib Axes to add the vertical line to.
+    x                       x coordinate where the line should be added.
+    color                   Color of the line and text label.
+    label                   Text label (will be displayed at the top of the line).
+    horizontalalignment     Horizontal alignment of the text label relative to the line.
+'''
+def add_vline(axis, x, color, horizontalalignment, label=''):
+    axis.axvline(x, color=color, linestyle='dashed', linewidth=1)
+    axis.text(x, axis.get_ylim()[1], label, size=6, horizontalalignment=horizontalalignment, verticalalignment='bottom', color=color)
 
 '''
 Function that creates a histogram.
@@ -96,10 +109,6 @@ Input:
 Output: 
     True if histogram created
     False if dataframe contained infinity, in which case no histogram is created
-
-    # TODO: Need to edit this so that extreme outliers and outliers never go in the same bin e.g. if our extreme threshold is 3.7.
-    # TODO: Improve this by removing large gaps, e.g. one of the values bloodOxygenation age 10 has a modified_z_score of 400, which creates a very large gap in the x-axis. Solution: put any scores above a certain high number (e.g. 20) into one category and add a label for it showing the range of scores.
-    # TODO: add slider in the PNG that alters thresholds for outlier and extreme outlier.
 '''
 def plot_z_hist(df, axis, z, extreme_z, title, constant=10):
     if (np.isinf(df['mod_z_score']).values.sum()):
@@ -177,16 +186,16 @@ def plot_z_hist(df, axis, z, extreme_z, title, constant=10):
 
     # If there are any outliers, add vertical lines to show where the thresholds are.
     [left, right] = axis.get_xlim()
-    if (z * constant < right): 
-        axis.axvline(constant * z, color='orange', linestyle='dashed', linewidth=1, label='Outlier')
-    if (-z * constant > left): 
-        axis.axvline(constant * -z, color='orange', linestyle='dashed', linewidth=1, label='Outlier')
+    if (constant * z < right): 
+        add_vline(axis, constant * z, 'orange', 'left', 'Outlier')
+    if (constant * -z > left): 
+        add_vline(axis, constant * -z, 'orange', 'right', 'Outlier')
     
     # If there are any extreme outliers, add vertical lines to show where the thresholds are.
-    if (extreme_z * constant < right): 
-        axis.axvline(constant * extreme_z, color='r', linestyle='dashed', linewidth=1, label='Extreme')
-    if (-extreme_z * constant > left): 
-        axis.axvline(constant * -extreme_z, color='r', linestyle='dashed', linewidth=1, label='Extreme')
+    if (constant * extreme_z < right): 
+        add_vline(axis, constant * extreme_z, 'r', 'left', 'Extreme')
+    if (constant * -extreme_z > left): 
+        add_vline(axis, constant * -extreme_z, 'r', 'right', 'Extreme')
     
     # Create a list of legend elements with descriptive labels. Add colour-coding.
     legend_elements = [Line2D([0], [0], color='r', lw=2, label=legend_label('Extreme', extreme_n, total_n)),
@@ -194,10 +203,9 @@ def plot_z_hist(df, axis, z, extreme_z, title, constant=10):
                    Line2D([0], [0], color='b', lw=2, label=legend_label('Inlier', non_n, total_n))]
 
     # Create the legend.
-    axis.legend(handles=legend_elements, loc='center left', bbox_to_anchor=(1.05, 0.5), prop={'size': 8}, title=title)
+    axis.legend(handles=legend_elements, loc='center left', bbox_to_anchor=(1, 0.5), prop={'size': 8}, title=title)
 
     return True
-    
 
 # plot histogram of data
 def plot_value_hist(df, filename):
