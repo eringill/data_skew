@@ -44,7 +44,7 @@ Input:
     z           Threshold above which the absolute value of a modified z-score is considered an outlier
     extreme_z   Threshold above which the absolute value of a modified z-score is considered an extreme outlier
 '''
-def plot_z_hists(df, filename, z, extreme_z):
+def plot_z_hists(df, filename, z, extreme_z, hist_edge):
     # Because floats cannot be used in some plt function arguments, this constant wil be used to adjust float values such as thresholds.
     constant = 10
     [min_age, _, ages_n] = min_max_age(df)
@@ -56,7 +56,7 @@ def plot_z_hists(df, filename, z, extreme_z):
         # Get the dataframe for that age.
         df_age = age_df(df, min_age + i)
         # Create a histogram for that age.
-        plot_z_hist(df_age, axes[i], z, extreme_z, ' Age {}'.format(min_age + i), constant)
+        plot_z_hist(df_age, axes[i], z, extreme_z, ' Age {}'.format(min_age + i), hist_edge=hist_edge, constant=constant)
 
     # Since we multiplied the x-values by a constant, we need to adjust the x-tick values by that constant.
     tick_values, _ = plt.xticks()
@@ -107,12 +107,13 @@ Input:
     z           Threshold above which the absolute value of a modified z-score is considered an outlier
     extreme_z   Threshold above which the absolute value of a modified z-score is considered an extreme outlier
     title       Desired title of the histogram
-    constant    Constant to use to adjust floats into int, and vice versa.
+    constant    Constant to use when turning modified z-scores (float) into ints (required for histogram parameters).
+    hist_edge   Maximum x-limit. Any modified z-scores >= hist_edge (or < -hist_edge) will not be shown on the histogram.
 Output: 
     True if histogram created
     False if dataframe contained infinity, in which case no histogram is created
 '''
-def plot_z_hist(df, axis, z, extreme_z, title, constant=10):
+def plot_z_hist(df, axis, z, extreme_z, title, hist_edge, constant=10):
     # Find the total rows in the dataframe.
     total_n = df.shape[0]
 
@@ -135,24 +136,16 @@ def plot_z_hist(df, axis, z, extreme_z, title, constant=10):
     # We want to split histogram bins so that non-outliers and outliers are never in the same bin as each other.
     # Ideally we would use a bin step of 0.5 (assuming the mod z-score outlier threshold is 3.5).
     # However, the bins parameter in axis.hist does not accept floats, so we cannot pass in 0.5. 
-    # Instead, multiply z-scores by the constant.    
+    # Instead, multiply z-scores by the constant.
     new_df = df['mod_z_score'] * constant
 
     # Play around with the bin width and yscale value to see what produces the most informative visuals.
     bin_width = 5
-    axis.set_yscale('symlog')
-    # Any modified z-scores >= hist_edge (or < -hist_edge) will not be shown on the histogram.
-    # In other words, set a maximum x-limit (xlim). This value is not automatically adjusted by the constant.
-    hist_edge = 10
+    axis.set_yscale('log')
 
-    # Subtract bin_width from minimum mod_z_score to ensure that the min is included in the histogram range.
-    # Add bin_width to maximum mod_z_score to ensure that the max is included in the histogram range. 
-    range_min = bin_width * round(new_df.min() / bin_width) - bin_width
-    range_max = bin_width * round(new_df.max() / bin_width) + bin_width
-    # If our min/max mod_z_scores are within hist_edge, then display all mod_z_scores.
-    # If our min/max mod_z_scores are outside hist_edge, then only display mod_z_scores within hist_edge.
-    # Need the "+1" because range() function doesn't include its second argument in its output range.
-    bin_range = range(max(range_min, -hist_edge * constant), min(range_max, hist_edge * constant)+1, bin_width)
+    # Only display mod_z_scores within hist_edge.
+    # Need the "+ 1" because range() function doesn't include its second argument in its output range.
+    bin_range = range(-hist_edge * constant, hist_edge * constant + 1, bin_width)
 
     # Create the histogram.
     _, _, bars = axis.hist(new_df, bins=bin_range, edgecolor='k', alpha=0.5, align='mid')
@@ -214,9 +207,9 @@ def plot_z_hist(df, axis, z, extreme_z, title, constant=10):
     non_n = df.shape[0] - extreme_n - outlier_n
     
     # Create a list of legend elements with descriptive labels. Add colour-coding.
-    legend_elements = [Line2D([0], [0], color='r', lw=2, label=legend_label('Extreme', extreme_n, total_n)),
+    legend_elements = [Line2D([0], [0], color='b', lw=2, label=legend_label('Inlier', non_n, total_n)),
                    Line2D([0], [0], color='orange', lw=2, label=legend_label('Outlier', outlier_n, total_n)),
-                   Line2D([0], [0], color='b', lw=2, label=legend_label('Inlier', non_n, total_n))]
+                   Line2D([0], [0], color='r', lw=2, label=legend_label('Extreme', extreme_n, total_n))]
 
     # Create the legend.
     axis.legend(handles=legend_elements, loc='center left', bbox_to_anchor=(1, 0.5), prop={'size': 8}, title=title)

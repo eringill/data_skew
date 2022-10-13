@@ -43,6 +43,7 @@ parser = OptionParser()
 parser.add_option("-i", "--input-file", dest="input_file", action="store", type="string", help="The input filepath.")
 parser.add_option("-z", "--z-outlier-threshold", dest="z_outlier_threshold", action="store", type="int", default=3.5, help="A value whose modified z-score has an absolute value above this threshold is considered an outlier. Default is 3.5.")
 parser.add_option("-e", "--extreme-outlier-threshold", dest="extreme_outlier_threshold", action="store", type="float", default=7, help="A value whose modified z-score has an absolute value above this threshold is considered an extreme outlier. Default is 7.")
+parser.add_option("-x", "--x-lim", dest="x_limit", action="store", type="int", default=12, help="Maximum x-limit. Any modified z-scores whose absolute values exceed this limit will not be shown on the histogram. Default is 12.")
 
 
 (options, args) = parser.parse_args()
@@ -89,7 +90,7 @@ data_output = o.df_append(data_z_scores)
 
 # age5 = s.age5_df(no_outliers)
 
-s.plot_z_hists(data_output, filename, options.z_outlier_threshold, options.extreme_outlier_threshold)
+s.plot_z_hists(data_output, filename, options.z_outlier_threshold, options.extreme_outlier_threshold, options.x_limit)
 
 # s.plot_value_hist(df_age, filename)
 
