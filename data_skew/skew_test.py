@@ -9,6 +9,8 @@ from scipy.stats import skew, skewtest
 from matplotlib.lines import Line2D
 from pathlib import Path
 import numpy as np
+import math
+from textwrap import fill 
 
 
 # select data from highest age only
@@ -111,13 +113,29 @@ Output:
     False if dataframe contained infinity, in which case no histogram is created
 '''
 def plot_z_hist(df, axis, z, extreme_z, title, constant=10):
-    if (np.isinf(df['mod_z_score']).values.sum()):
+    # Find the total rows in the dataframe.
+    total_n = df.shape[0]
+
+    # Find the total number of NaN scores.
+    nan_n = df.isnull().values.sum()
+    # Find the total number of inf scores.
+    inf_low_n = len(df.loc[df['mod_z_score'] == -math.inf])
+    inf_high_n = len(df.loc[df['mod_z_score'] == math.inf])
+    # If all the modified z-scores are NaN or infinite, don't make a histogram.
+    if (total_n - nan_n - inf_low_n - inf_high_n == 0):
+        # Use invisible plots to report NaN and infinites in the legend.
+        axis.plot([], [], ' ', label=fill('When >50% of data values are identical, modified z-scores become -inf, NaN, or inf.', 31))
+        axis.plot([], [], ' ', label=legend_label('-inf', inf_low_n, total_n))
+        axis.plot([], [], ' ', label=legend_label('NaN', nan_n, total_n))
+        axis.plot([], [], ' ', label=legend_label('inf', inf_high_n, total_n))
+        # Create the legend.
+        axis.legend(loc='center left', bbox_to_anchor=(1, 0.5), prop={'size': 8}, title=title)
         return False
-    
+
     # We want to split histogram bins so that non-outliers and outliers are never in the same bin as each other.
     # Ideally we would use a bin step of 0.5 (assuming the mod z-score outlier threshold is 3.5).
     # However, the bins parameter in axis.hist does not accept floats, so we cannot pass in 0.5. 
-    # Instead, multiply z-scores by the constant.
+    # Instead, multiply z-scores by the constant.    
     new_df = df['mod_z_score'] * constant
 
     # Play around with the bin width and yscale value to see what produces the most informative visuals.
@@ -153,13 +171,6 @@ def plot_z_hist(df, axis, z, extreme_z, title, constant=10):
             bar.set_color('orange')
         else:
             bar.set_color('b')
-    
-    # Find the total rows in the dataframe.
-    total_n = df.shape[0]
-    # Find the number of extreme outliers, outliers, and non-outliers.
-    extreme_n = len(df.loc[abs(df['mod_z_score']) > extreme_z])
-    outlier_n = len(df.loc[abs(df['mod_z_score']) > z]) - extreme_n
-    non_n = df.shape[0] - extreme_n - outlier_n
 
     # Get min and max mod_z_scores.
     min_z = df['mod_z_score'].min()
@@ -196,6 +207,11 @@ def plot_z_hist(df, axis, z, extreme_z, title, constant=10):
         add_vline(axis, constant * extreme_z, 'r', 'left', 'Extreme')
     if (constant * -extreme_z > left): 
         add_vline(axis, constant * -extreme_z, 'r', 'right', 'Extreme')
+    
+    # Find the number of extreme outliers, outliers, and non-outliers.
+    extreme_n = len(df.loc[abs(df['mod_z_score']) > extreme_z])
+    outlier_n = len(df.loc[abs(df['mod_z_score']) > z]) - extreme_n
+    non_n = df.shape[0] - extreme_n - outlier_n
     
     # Create a list of legend elements with descriptive labels. Add colour-coding.
     legend_elements = [Line2D([0], [0], color='r', lw=2, label=legend_label('Extreme', extreme_n, total_n)),
