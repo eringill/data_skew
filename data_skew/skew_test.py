@@ -205,11 +205,30 @@ def plot_z_hist(df, axis, z, extreme_z, title, hist_edge, constant=10):
     extreme_n = len(df.loc[abs(df['mod_z_score']) > extreme_z])
     outlier_n = len(df.loc[abs(df['mod_z_score']) > z]) - extreme_n
     non_n = df.shape[0] - extreme_n - outlier_n
+
+    # Add information about skewness.
+    skew_result = calculate_skew(df)
+    if (skew_result):
+        [skew, significance] = skew_result
+        skew_label = '\nSkew {:.4}'.format(skew)
+        if skew > 0:
+            skew_label += ': weight in left.'
+        elif skew < 0:
+            skew_label += ': weight in right.'
+        else: 
+            skew_label += ': normally distributed.'
+        if significance <= 0.05:
+            skew_label += '\nSignificantly skewed.'
+        else:
+            skew_label += '\nNot significantly skewed.'
+    else: 
+        skew_label = '\nNeed 8 values to calculate skew.'
     
     # Create a list of legend elements with descriptive labels. Add colour-coding.
     legend_elements = [Line2D([0], [0], color='b', lw=2, label=legend_label('Inlier', non_n, total_n)),
                    Line2D([0], [0], color='orange', lw=2, label=legend_label('Outlier', outlier_n, total_n)),
-                   Line2D([0], [0], color='r', lw=2, label=legend_label('Extreme', extreme_n, total_n))]
+                   Line2D([0], [0], color='r', lw=2, label=legend_label('Extreme', extreme_n, total_n)),
+                   Line2D([0], [0], alpha=0, lw=2, label=skew_label)]
 
     # Create the legend.
     axis.legend(handles=legend_elements, loc='center left', bbox_to_anchor=(1, 0.5), prop={'size': 8}, title=title)
@@ -230,23 +249,27 @@ def plot_value_hist(df, filename):
 
 
 # calculate skew of data
-def calculate_skew(df, filename):
+def calculate_skew(df, filename=None):
     sk = skew(df["value"])
-    print('\nSkewness for data : ', str(sk))
-    print('\n0 : normally distributed.')
-    print('\n> 0 : more weight in left tail.')
-    print('\n< 0 : more weight in right tail.')
+    # print('\nSkewness for data : ', str(sk))
+    # print('\n0 : normally distributed.')
+    # print('\n> 0 : more weight in left tail.')
+    # print('\n< 0 : more weight in right tail.')
+    if (df.shape[0] < 8):
+        return None
     result = skewtest(df["value"])
-    if result[1] <= 0.05:
-        print('\nData are significantly skewed.')
-    else:
-        print('\nSkewness of data is not significant.')
+    # if result[1] <= 0.05:
+    #     print('\nData are significantly skewed.')
+    # else:
+    #     print('\nSkewness of data is not significant.')
     line1 = "skewness = " + str(sk) + "\n"
     line2 = "significance = p " + str(result[1]) + "\n"
-    skewfilename = filename.replace('.csv', '_skewtestresults.txt')
-    with open(skewfilename, 'w') as file:
-        file.writelines([line1, line2])
+    if (filename):
+        skewfilename = filename.replace('.csv', '_skewtestresults.txt')
+        with open(skewfilename, 'w') as file:
+            file.writelines([line1, line2])
 
+    return [sk, result[1]]
 
 # calculate covariance of data with age
 def calculate_cov(df, filename):
